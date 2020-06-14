@@ -51,12 +51,11 @@ connectPort = findArdu(foundPorts)
 
 if connectPort != 'None':
     ser = serial.Serial (connectPort, baudrate = 9600, timeout=1)
-    print("Connected to: " + connectPort)
+    conStat = "Connected to: " + connectPort
     time.sleep(2)
-    print("Ready")
     
 else:
-    print("Connection error!")
+    conStat = "Connection error!"
 
 
 def dataRequest(): 
@@ -72,6 +71,7 @@ def sendColor(colorValue):
 
 
 def findInFile(colorToFind):
+    saveLast(colorToFind)
     print("Searching...")
 
     with open(dir_path + '/' + filePath, encoding="utf-8") as f:
@@ -111,7 +111,7 @@ def loadColors():
 
     colorToSet = input("\nChose color to set: ")
     findInFile(colorToSet)
-    saveLast(colorToSet)
+    
 
 def setNewColor(numToSet):
     
@@ -212,7 +212,7 @@ def addNewColor():
 
 
 
-def loadLastColor():
+def loadLastColor(event):
     f = open(dir_path + '/' + 'options.txt', "r")
     
     line = f.readline()
@@ -249,8 +249,8 @@ def menu():
         print("3) Load last color")
         # print("x) Show available color effects")
         # print("x) Manage section ")
-        print("8) save last")
-        print("9) Turn off color ")
+        print("8) Save last - test")
+        print("9) Turn off the lights ")
 
         wyb = int(input("Chose option: "))
 

@@ -7,7 +7,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, NEO_GRB + NEO_KH
 
 int r,g,b, color;
 String dane, rS, gS,bS;
-
+unsigned long aktualnyCzas = 0;
+unsigned long zapamietanyCzas = 0;
 
 void setup() {
     Serial.begin(9600);
@@ -20,6 +21,8 @@ void setup() {
 
 void loop() {
     readStr();
+    aktualnyCzas = millis();
+
 }
 
 void readStr() {
@@ -44,7 +47,7 @@ void readStr() {
             strip.setPixelColor(i, r, b, g); 
             //value rbg because my led strip have wrong coding
             strip.show();
-            delay(80);
+            delay(50);
         }            
     }       
 }
