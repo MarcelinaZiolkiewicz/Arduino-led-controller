@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPixel.h> 
 
 #define LED_PIN 10
-#define LED_COUNT 16
+#define LED_COUNT 40
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -41,9 +41,10 @@ void readStr() {
         Serial.println("Color loading");
 
         for(int i = 0; i <= LED_COUNT; i++){
-            strip.setPixelColor(i, r, g, b); //yellow
+            strip.setPixelColor(i, r, b, g); 
+            //value rbg because my led strip have wrong coding
             strip.show();
-            delay(200);
+            delay(80);
         }            
     }       
 }

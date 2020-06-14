@@ -2,6 +2,7 @@ import serial.tools.list_ports
 import serial
 import time
 import os
+import re
 
 red = '' 
 green = ''
@@ -9,7 +10,21 @@ blue = ''
 rgbValue = ''
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-filePath = 'colors.txt'
+filePath = 'colorsStrip.txt'
+
+def loadOptions():
+    f = open(dir_path + '/' + 'options.txt', "r")
+    #USERNAME AND LANGUAGE LOAD
+
+    print(f.readline())
+
+
+    # for line in f:
+
+    #     underTab = line.split("_")
+    #     print(underTab)
+
+    f.close()
 
 
 def getPorts():
@@ -58,16 +73,18 @@ def sendColor(colorValue):
 
 def findInFile(colorToFind):
     print("Searching...")
-    #ścieżka jako zmienna i będzie można wysłać na który pasek led wysłać jakie kolory
-    with open(dir_path + '/' + filePath) as f:
+
+    with open(dir_path + '/' + filePath, encoding="utf-8") as f:
         txtFile = f.readlines()
 
     for line in txtFile:
         
         lineTab = line.split(".")
+        # print(lineTab)
         rgbValue = line.split("_")
+        # print(rgbValue)
 
-        if colorToFind in lineTab:
+        if colorToFind in lineTab[0]:
             print("Color found ", end="")
             sendColor(rgbValue[1])
             return True
@@ -78,7 +95,7 @@ def findInFile(colorToFind):
 
 def loadColors():
 
-    f = open(dir_path + '/' + filePath, "r")
+    f = open(dir_path + '/' + filePath, "r", encoding="utf-8")
 
     count = len(open(dir_path + '/' + filePath, "r").readlines())
     print(f'\nColors found: {count} \n')
@@ -94,6 +111,7 @@ def loadColors():
 
     colorToSet = input("\nChose color to set: ")
     findInFile(colorToSet)
+    saveLast(colorToSet)
 
 def setNewColor(numToSet):
     
@@ -108,7 +126,7 @@ def setNewColor(numToSet):
         print("Incorrect value")
 
 def writeToFile(lineToAdd):
-    with open(dir_path + '/' + 'colorsStrip.txt', "a") as f:
+    with open(dir_path + '/' + filePath, "a", encoding="utf-8") as f:
         f.write(lineToAdd)
 
 def addZero(toEdit):    #autocompleating when the value don't have 3 chars
@@ -125,7 +143,7 @@ def addZero(toEdit):    #autocompleating when the value don't have 3 chars
         return toEdit
 
 def addNewColor():
-    count = len(open(dir_path + '/' + 'colors.txt', "r").readlines())+1
+    count = len(open(dir_path + '/' + filePath, "r").readlines())+1
     #print("-!- Write '#info' for more info -!-")
 
     name = input("\nAdd color name: ")
@@ -152,16 +170,18 @@ def addNewColor():
             blue = addZero(blue)
 
             print()
+            print(count)
+
 
             writable = str(count) + "." + name + "_" + str(red) + str(green) + str(blue) + "\n"
-            writeToFile(writable)
 
+            writeToFile(writable)
             setNewColor(count)
 
 
         elif valOpt == "2":
             print("-- Add HEX value --")
-            hexVal = input("Color: ") #trzeba z dekodować hex na rgb
+            hexVal = input("Color: ") 
 
             if hexVal[0] == '#':
                 if len(hexVal)-1 == 6:
@@ -176,6 +196,7 @@ def addNewColor():
                     blueH = addZero(blueH)
 
                     writable = str(count) + "." + name + "_" + redH + greenH + blueH + "\n"
+
                     writeToFile(writable)
 
                     setNewColor(count)
@@ -189,11 +210,33 @@ def addNewColor():
         else:
             print("Incorrect value")
 
+
+
+def loadLastColor():
+    f = open(dir_path + '/' + 'options.txt', "r")
+    
+    line = f.readline()
+    f.close()
+
+    underTab = line.split("_")
+    findInFile(underTab[1].strip())
+
 def showAllColors():
     pass
 
-def loadLastColor():
-    pass
+def saveLast(color):
+    
+    newData = "lastColor_" + color + "\n"
+
+    with open(dir_path + '/' + "options.txt", "r+") as f:
+        data = f.read()
+        f.seek(0,0) 
+        firstLine = f.readline()
+        f.seek(0,0)
+        f.truncate() 
+        f.write(re.sub(firstLine,newData, data))
+
+  
 
 def ledType():
     pass
@@ -203,10 +246,10 @@ def menu():
         print("-- MENU --")
         print("1) Show color list")
         print("2) Add color to list") 
-        # print("x) Load last color")
+        print("3) Load last color")
         # print("x) Show available color effects")
         # print("x) Manage section ")
-        # print("x) Options")
+        print("8) save last")
         print("9) Turn off color ")
 
         wyb = int(input("Chose option: "))
@@ -217,6 +260,12 @@ def menu():
         
         elif wyb == 2:
             addNewColor()
+        
+        elif wyb == 3:
+            loadLastColor()
+        
+        elif wyb == 8:
+            saveLast()
 
         elif wyb == 9:
             sendColor("000000000")
@@ -225,4 +274,4 @@ def menu():
         else:
             print('Incorrect value')
 
-menu() 
+# menu() 

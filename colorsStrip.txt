@@ -5,7 +5,7 @@
 5.green yellow_173255047
 6.Forest green_034139035
 7.orchid_218112214
-8.Pink_001002003
+8.Pink_001003002
 9.off_000000000
 10.deep pink_255020147
 11.royal blue_065105225
@@ -15,3 +15,9 @@
 15.dark orange_255140000
 16.light coral_240128128
 17.June bud_186220088
+18.blurple_072052212
+19.Greenland green_034166179
+20.yriel yellow_255221089
+21.sizzling red_245087059
+22.Minty green_011232129
+23.żółty_255211042
